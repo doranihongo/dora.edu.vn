@@ -99,3 +99,36 @@
   window.addEventListener('load', sync);
   if(window.ResizeObserver) new ResizeObserver(sync).observe(banner);
 })();
+
+/* leadership slogans: 2s after the team grid scrolls into view the first slogan (Nhi) appears,
+   then Đạt, Hoa and Nhung follow one after another, a new one every 5s (the previous one fades
+   out just before the next fades in). One pass per visit; hover still shows a slogan on its own. */
+(function(){
+  var START_DELAY = 2000;  // wait after the grid comes into view before the first slogan
+  var INTERVAL    = 5000;  // time from one slogan appearing to the next one appearing
+  var GAP         = 300;   // the previous slogan is hidden this long before the next appears
+  var LOOP        = false; // true: start again from the first person after the last one
+
+  var grid = document.querySelector('.team-grid');
+  if(!grid || !('IntersectionObserver' in window)) return;
+  var quotes = grid.querySelectorAll('.team-quote');
+  if(!quotes.length) return;
+
+  var timers = [];
+  function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
+  function stop(){
+    timers.forEach(clearTimeout); timers = [];
+    for(var i = 0; i < quotes.length; i++) quotes[i].classList.remove('is-active');
+  }
+  function step(i){
+    quotes[i].classList.add('is-active');
+    later(function(){ quotes[i].classList.remove('is-active'); }, INTERVAL - GAP);
+    if(i + 1 < quotes.length) later(function(){ step(i + 1); }, INTERVAL);
+    else if(LOOP) later(function(){ step(0); }, INTERVAL);
+  }
+  function start(){ stop(); later(function(){ step(0); }, START_DELAY); }
+
+  new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){ if(entry.isIntersecting) start(); else stop(); });
+  }, {threshold: 0.35}).observe(grid);
+})();

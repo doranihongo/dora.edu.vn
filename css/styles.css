@@ -178,6 +178,9 @@ a:hover{color:var(--link-color-hover)}
 .hv10:hover{border-color:var(--accent-primary) !important;color:var(--accent-primary) !important;background-color:#fff !important}
 .hv11:hover{filter:brightness(1.08) !important}
 
+/* leadership slogans shown automatically by js/main.js (same look as :hover) */
+.team-quote.is-active{opacity:1 !important;transform:translateY(0) !important}
+
 /* design-system components (Button / Badge / Input) */
 .ds-btn{display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-sans);
   font-weight:var(--weight-semibold);border-radius:var(--radius-pill);cursor:pointer;opacity:1;
